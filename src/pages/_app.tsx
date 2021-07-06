@@ -1,10 +1,11 @@
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
-  
+
 import 'tailwindcss/tailwind.css';
 import 'src/styles/globals.css';
 
 import Layout from 'src/layout';
+import AccountProvider from 'src/contexts/AccountContext';
 
 const APP_NAME = 'Next.JS Starter';
 const APP_DESCRIPTION = 'Next.JS Starter';
@@ -30,9 +31,11 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         <link rel="manifest" href="/manifest.json" />
         <link rel="shortcut icon" href="/icons/favicon.ico" />
       </Head>
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
+      <AccountProvider>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </AccountProvider>
     </>
   );
 }

@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html>
+<body>
+  <h1>Waiting...</h1>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/oidc-client/1.11.5/oidc-client.min.js" integrity="sha512-pGtU1n/6GJ8fu6bjYVGIOT9Dphaw5IWPwVlqkpvVgqBxFkvdNbytUh0H8AP15NYF777P4D3XEeA/uDWFCpSQ1g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script>
+    new window.Oidc.UserManager().signinSilentCallback(window.location.href);
+  </script>
+</body>
+</html>

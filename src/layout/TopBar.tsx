@@ -1,7 +1,9 @@
 import Link from 'next/link';
-import AccountMenu from './AccountMenu';
+import dynamic from 'next/dynamic';
 import Breadcrumb from './Breadcrumb';
 import Logo from './Logo';
+
+const AccountMenu = dynamic(() => import('./AccountMenu'), { ssr: false });
 
 export default function TopBar() {
   return (

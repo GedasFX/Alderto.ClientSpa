@@ -89,6 +89,10 @@ module.exports = {
           33: '#8C9DCA',
           34: '#0E2561',
           35: '#E63B1F',
+          discord: {
+            DEFAULT: '#7289da',
+            dark: '#253c8d'
+          }
         },
       },
       fontFamily: {
