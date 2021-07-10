@@ -1,8 +1,7 @@
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 
-import 'tailwindcss/tailwind.css';
-import 'src/styles/globals.css';
+import 'src/styles/template/app.scss';
 
 import Layout from 'src/layout';
 import AccountProvider from 'src/contexts/AccountContext';

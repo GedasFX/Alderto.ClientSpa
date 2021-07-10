@@ -3,5 +3,5 @@ type BankCardProps = {
 };
 
 export default function BankCard({ bank }: BankCardProps) {
-  return <div>{JSON.stringify(bank)}</div>;
+  return <div className="intro-y box">{JSON.stringify(bank)}</div>;
 }

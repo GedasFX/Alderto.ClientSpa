@@ -1,0 +1,5 @@
+@layer components {
+.dropzone {
+    @apply border-gray-200 border-dashed dark:bg-dark-1;
+}
+}
