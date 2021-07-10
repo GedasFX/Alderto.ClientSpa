@@ -7,7 +7,7 @@ export type HomeProps = {
 export default function Home({ news }: HomeProps) {
   return (
     <div>
-      <div className="intro-y flex flex-col sm:flex-row items-center mt-8 mb-6">
+      <div className="intro-y flex flex-col sm:flex-row items-center mt-4 mb-4">
         <h2 className="text-lg font-medium mr-auto">Latest news</h2>
       </div>
       <div className="grid grid-cols-1 space-y-4">

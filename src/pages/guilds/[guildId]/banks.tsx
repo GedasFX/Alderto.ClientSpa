@@ -14,6 +14,9 @@ export default function GuildBanks() {
 
   return (
     <div>
+      <div className="intro-y flex flex-col sm:flex-row items-center mt-4 mb-4">
+        <h2 className="text-lg font-medium mr-auto">Banks</h2>
+      </div>
       {data.map(b => (
         <BankCard key={b.id} bank={b} />
       ))}

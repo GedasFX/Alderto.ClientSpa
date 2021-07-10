@@ -108,7 +108,7 @@ export default function AccountMenu() {
   }
 
   return (
-    <div className="flex gap-4 items-center">
+    <div className="flex gap-4 items-center ml-auto">
       <ServerSelect />
       <div className="intro-x dropdown w-8 h-8">
         <button
