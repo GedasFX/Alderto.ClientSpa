@@ -1,0 +1,17 @@
+@import 'template/app';
+
+.ReactModal__Content {
+  @apply w-full m-4;
+
+  @screen md {
+    @apply w-2/3;
+  }
+
+  @screen lg {
+    @apply w-1/2;
+  }
+
+  @screen 2xl {
+    width: 760px;
+  }
+}

@@ -1,49 +1,50 @@
-import { useForm } from 'react-hook-form';
-import { useApi } from 'src/services';
+import Form, { Input, TextArea } from 'src/components/Form';
 
 type BankItemFormProps = {
-  bankId: number;
-  item?: Dto.Guild.BankItem;
+  item: Dto.Guild.BankItem | null;
+  onSubmit?: (item: Dto.Guild.BankItem | null) => void;
 };
 
-export default function BankItemForm({ bankId, item }: BankItemFormProps) {
-  const { register, handleSubmit } = useForm();
-
-  const {
-    data,
-    mutate,
-    api: { request },
-  } = useApi<Dto.Guild.Bank>('/banks');
-
-  const onSubmit = handleSubmit(async o => {
-    if (!data) return;
-
-    const result = await request<Dto.Guild.BankItem>(`/${bankId}/items`, JSON.stringify(o), {
-      method: 'POST',
-    });
-
-    const bankIdx = data.findIndex(o => o.id === bankId);
-    const bank = data[bankIdx];
-
-    const newData = [...data];
-    newData.splice(bankIdx, 1, { ...bank, contents: [...bank.contents, result] });
-
-    await mutate(newData);
-  });
-
+export default function BankItemForm({ item, onSubmit }: BankItemFormProps) {
   return (
     <div className="p-2">
-      <form onSubmit={onSubmit}>
-        <label className="form-label">
-          Name
-          <input
-            className="form-control"
-            defaultValue={item?.name}
-            {...register('name', { required: true, maxLength: 70 })}
-          />
-        </label>
-        <input type="submit" />
-      </form>
+      <Form<Dto.Guild.BankItem>
+        defaultValues={item ?? undefined}
+        onSubmit={i => onSubmit && onSubmit(i)}
+      >
+        {({ register }) => (
+          <>
+            <Input label="Name*" {...register('name', { required: true, maxLength: 70 })} />
+            <TextArea label="Description" {...register('description', { maxLength: 280 })} />
+            <Input label="Value" type="number" {...register('value', { valueAsNumber: true })} />
+            <Input
+              label="Quantity"
+              type="number"
+              {...register('quantity', { valueAsNumber: true })}
+            />
+            <Input label="Image" {...register('imageUrl', { maxLength: 140 })} />
+
+            {onSubmit && (
+              <div className="flex justify-end gap-2 mt-2">
+                {item && (
+                  <button
+                    type="button"
+                    className="btn btn-danger"
+                    onClick={() => confirm('Are you sure?') && onSubmit(null)}
+                  >
+                    Delete
+                  </button>
+                )}
+                <input
+                  type="submit"
+                  className="btn btn-primary"
+                  value={item ? 'Update' : 'Create'}
+                />
+              </div>
+            )}
+          </>
+        )}
+      </Form>
     </div>
   );
 }

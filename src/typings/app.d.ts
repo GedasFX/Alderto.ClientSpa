@@ -17,5 +17,14 @@ export declare global {
       name: string;
       icon?: string;
     };
+
+    type ErrorResponse = {
+      errorState: ErrorState;
+      message: string;
+    };
+
+    type ErrorState = {
+      statusCode: number;
+    };
   }
 }
