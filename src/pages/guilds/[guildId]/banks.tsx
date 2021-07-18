@@ -2,7 +2,7 @@ import BankCard from 'src/components/guild/bank/BankCard';
 import { useApi } from 'src/services';
 
 export default function GuildBanks() {
-  const { data, error, mutate } = useApi<Dto.Guild.Bank>('/banks');
+  const { data, error } = useApi<Dto.Guild.Bank>('/banks');
 
   if (error) {
     return <span>Error</span>;

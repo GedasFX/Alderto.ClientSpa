@@ -12,8 +12,8 @@ export declare global {
         name: string;
         value: number;
         quantity: number;
-        description: string;
-        imageUrl: string;
+        description?: string;
+        imageUrl?: string;
       };
     }
   }

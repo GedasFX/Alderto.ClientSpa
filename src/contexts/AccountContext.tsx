@@ -27,8 +27,6 @@ export default function AccountProvider({ children }: PropsWithChildren<unknown>
     }
   }, [router.query.guildId]);
 
-  console.log(user);
-
   return (
     <AccountContext.Provider value={{ user, setUser, guildId }}>{children}</AccountContext.Provider>
   );

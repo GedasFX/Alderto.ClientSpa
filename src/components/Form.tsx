@@ -1,4 +1,4 @@
-import React, { PropsWithChildren } from 'react';
+import React from 'react';
 import { FieldValues, SubmitHandler, useForm, UseFormProps, UseFormReturn } from 'react-hook-form';
 
 type FormProps<TFormValues> = {
@@ -16,18 +16,6 @@ export default function Form<T extends FieldValues>({
 
   return <form onSubmit={formMethods.handleSubmit(onSubmit)}>{children(formMethods)}</form>;
 }
-
-const FormControl = ({
-  label,
-  children,
-}: PropsWithChildren<{
-  label: React.ReactNode;
-}>) => (
-  <label className="form-label block mb-3">
-    {label}
-    {children}
-  </label>
-);
 
 type InputProps = React.DetailedHTMLProps<
   React.InputHTMLAttributes<HTMLInputElement>,
@@ -52,7 +40,10 @@ type TextAreaProps = React.DetailedHTMLProps<
   label?: React.ReactNode;
 };
 
-export const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(function TextArea(props, ref) {
+export const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(function TextArea(
+  props,
+  ref
+) {
   return (
     <label className="form-label block mb-3">
       {props.label}

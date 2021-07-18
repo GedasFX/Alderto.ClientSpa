@@ -1,5 +1,6 @@
 import { isEmpty } from 'lodash';
 import { useCallback } from 'react';
+import { toast } from 'react-toastify';
 import { useAccount } from 'src/contexts/AccountContext';
 import useSWR from 'swr';
 
@@ -46,7 +47,15 @@ const fetcher = async <T>(
 
   if (result.ok) return (await result.json()) as T;
 
-  console.error(result, (await result.json()) as App.ErrorResponse);
+  const err = (await result.json()) as App.ErrorResponse;
+  toast.error(err.message, {
+    position: 'top-right',
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+  });
 };
 
 export const useApi = <T extends { id: string | number }>(url: string | null) => {

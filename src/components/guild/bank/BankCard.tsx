@@ -1,16 +1,14 @@
 import { FaPiggyBank, FaPlusCircle, FaQuestionCircle } from 'react-icons/fa';
+import { FiX } from 'react-icons/fi';
 import BankItemForm from './BankItemForm';
 import { useCallback } from 'react';
-import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
 import { calcObjDiff, useApi } from 'src/services';
 import { isEmpty } from 'lodash';
+import { modal } from 'src/services/modal';
 
 type BankCardProps = {
   bank: Dto.Guild.Bank;
 };
-
-const ReactSwal = withReactContent(Swal);
 
 export default function BankCard({ bank }: BankCardProps) {
   const {
@@ -23,24 +21,26 @@ export default function BankCard({ bank }: BankCardProps) {
     async (prev: Dto.Guild.BankItem | null, item: Dto.Guild.BankItem | null) => {
       if (!data) return;
 
+      if (item?.imageUrl === '') {
+        delete item.imageUrl;
+      }
+
       const newData = [...data];
 
-      if (prev !== null && item === null) {
-        // On Delete
+      if (prev === null && item !== null) {
+        // On Create
 
-        const result = await request<Dto.Guild.BankItem>(`/${bank.id}/items/${prev.id}`, null, {
-          method: 'DELETE',
-        });
+        const result = await request<Dto.Guild.BankItem>(
+          `/${bank.id}/items`,
+          JSON.stringify(item),
+          { method: 'POST' }
+        );
 
         if (!result) return;
 
         const bankIdx = data.findIndex(o => o.id === bank.id);
-        const bankItemIdx = bank.contents.findIndex(c => c.id === prev.id);
 
-        const newBankContents = [...bank.contents];
-        newBankContents.splice(bankItemIdx, 1, result);
-
-        newData.splice(bankIdx, 1, { ...bank, contents: newBankContents });
+        newData.splice(bankIdx, 1, { ...bank, contents: [...bank.contents, result] });
       }
 
       if (prev !== null && item !== null) {
@@ -66,40 +66,43 @@ export default function BankCard({ bank }: BankCardProps) {
         newData.splice(bankIdx, 1, { ...bank, contents: newBankContents });
       }
 
-      if (prev === null && item !== null) {
-        // On Create
+      if (prev !== null && item === null) {
+        // On Delete
 
-        const result = await request<Dto.Guild.BankItem>(
-          `/${bank.id}/items`,
-          JSON.stringify(item),
-          { method: 'POST' }
-        );
+        const result = await request<Dto.Guild.BankItem>(`/${bank.id}/items/${prev.id}`, null, {
+          method: 'DELETE',
+        });
 
         if (!result) return;
 
         const bankIdx = data.findIndex(o => o.id === bank.id);
+        const bankItemIdx = bank.contents.findIndex(c => c.id === prev.id);
 
-        newData.splice(bankIdx, 1, { ...bank, contents: [...bank.contents, result] });
+        const newBankContents = [...bank.contents];
+        newBankContents.splice(bankItemIdx, 1, result);
+
+        newData.splice(bankIdx, 1, { ...bank, contents: newBankContents });
       }
 
       await mutate(newData);
-      ReactSwal.close();
     },
     [bank, data, mutate, request]
   );
 
   const openForm = useCallback(
-    (item: Dto.Guild.BankItem | null) =>
-      ReactSwal.fire({
-        html: (
-          <>
-            <div className="p-2 pb-4 mb-4 border-b border-theme-2 dark:border-theme-4 text-lg">
-              {item === null ? 'Add new bank item' : item.name}
-            </div>
-            <BankItemForm item={item} onSubmit={i => handleSubmit(item, i)} />
-          </>
-        ),
-      }),
+    (item: Dto.Guild.BankItem | null) => {
+      const ref = modal.open(
+        <>
+          <div className="flex justify-between p-2 pb-4 mb-4 border-b border-theme-2 dark:border-theme-4 text-lg">
+            {item === null ? 'Add new bank item' : item.name}
+            <button>
+              <FiX strokeWidth={2.5} size={24} onClick={() => ref.close()} />
+            </button>
+          </div>
+          <BankItemForm item={item} onSubmit={i => handleSubmit(item, i).then(() => ref.close())} />
+        </>
+      );
+    },
     [handleSubmit]
   );
 

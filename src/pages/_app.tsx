@@ -1,10 +1,14 @@
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 
+import { ToastContainer } from 'react-toastify';
+
 import 'src/styles/app.scss';
+import 'react-toastify/dist/ReactToastify.min.css';
 
 import Layout from 'src/layout';
 import AccountProvider from 'src/contexts/AccountContext';
+import { ModalContainer } from 'src/services/modal';
 
 const APP_NAME = 'Next.JS Starter';
 const APP_DESCRIPTION = 'Next.JS Starter';
@@ -34,6 +38,8 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         <Layout>
           <Component {...pageProps} />
         </Layout>
+        <ToastContainer />
+        <ModalContainer />
       </AccountProvider>
     </>
   );
