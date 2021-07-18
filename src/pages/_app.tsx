@@ -2,13 +2,14 @@ import type { AppProps } from 'next/app';
 import Head from 'next/head';
 
 import { ToastContainer } from 'react-toastify';
+import { ModalContainer } from 'src/services/modal';
 
 import 'src/styles/app.scss';
 import 'react-toastify/dist/ReactToastify.min.css';
 
 import Layout from 'src/layout';
 import AccountProvider from 'src/contexts/AccountContext';
-import { ModalContainer } from 'src/services/modal';
+import GuildProvider from 'src/contexts/GuildContext';
 
 const APP_NAME = 'Next.JS Starter';
 const APP_DESCRIPTION = 'Next.JS Starter';
@@ -35,11 +36,13 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         <link rel="shortcut icon" href="/icons/favicon.ico" />
       </Head>
       <AccountProvider>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
-        <ToastContainer />
-        <ModalContainer />
+        <GuildProvider>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+          <ToastContainer />
+          <ModalContainer />
+        </GuildProvider>
       </AccountProvider>
     </>
   );

@@ -2,6 +2,7 @@ import { isEmpty } from 'lodash';
 import { useCallback } from 'react';
 import { toast } from 'react-toastify';
 import { useAccount } from 'src/contexts/AccountContext';
+import { useGuild } from 'src/contexts/GuildContext';
 import useSWR from 'swr';
 
 // Creates a new object with the difference in properties
@@ -59,9 +60,10 @@ const fetcher = async <T>(
 };
 
 export const useApi = <T extends { id: string | number }>(url: string | null) => {
-  const { guildId, user } = useAccount();
+  const { user } = useAccount();
+  const guild = useGuild();
 
-  url = guildId ? `/guilds/${guildId}` + url : null;
+  url = guild?.id ? `/guilds/${guild.id}` + url : null;
 
   if (!user) {
     url = null;

@@ -1,5 +1,7 @@
 export declare global {
   namespace App {
+    type AccessLevel = 0 | 1 | 2 | 3;
+
     type NewsPost = {
       authorUsername: string;
       authorAvatarId: string;
