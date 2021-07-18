@@ -132,12 +132,12 @@ export default function BankCard({ bank, editable, itemsEditable, onRequestEdit 
             </div>
           )}
         </div>
-        <div className="grid gap-3 py-2 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+        <div className="grid gap-3 p-2 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8">
           {bank.contents?.map(i => (
             <button
               key={i.id}
               title={i.description}
-              className="flex flex-col p-3 items-center"
+              className="flex flex-col p-3 items-center hover:bg-theme-4 dark:hover:bg-dark-5 rounded-lg"
               onClick={() => openItemForm(i)}
             >
               {i.imageUrl ? (
@@ -153,7 +153,10 @@ export default function BankCard({ bank, editable, itemsEditable, onRequestEdit 
             </button>
           ))}
           {itemsEditable && (
-            <button className="flex flex-col p-3 items-center" onClick={() => openItemForm(null)}>
+            <button
+              className="flex flex-col p-3 items-center hover:bg-theme-4 dark:hover:bg-dark-5 rounded-lg"
+              onClick={() => openItemForm(null)}
+            >
               <FaPlusCircle size={32} strokeWidth={1.5} />
               <div className="mt-1">Add new item</div>
             </button>
