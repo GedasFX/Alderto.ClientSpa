@@ -1,11 +1,12 @@
 import Form, { Input, TextArea } from 'src/components/Form';
 
 type BankItemFormProps = {
+  disabled?: boolean;
   item: Dto.Guild.BankItem | null;
   onSubmit?: (item: Dto.Guild.BankItem | null) => void;
 };
 
-export default function BankItemForm({ item, onSubmit }: BankItemFormProps) {
+export default function BankItemForm({ item, onSubmit, disabled }: BankItemFormProps) {
   return (
     <div className="p-2">
       <Form<Dto.Guild.BankItem>
@@ -14,18 +15,32 @@ export default function BankItemForm({ item, onSubmit }: BankItemFormProps) {
       >
         {({ register }) => (
           <>
-            <Input label="Name*" {...register('name', { required: true, maxLength: 70 })} />
-            <TextArea label="Description" {...register('description', { maxLength: 280 })} />
-            <Input label="Value" type="number" {...register('value', { valueAsNumber: true })} />
+            <Input
+              label="Name*"
+              disabled
+              {...register('name', { required: true, maxLength: 70 })}
+            />
+            <TextArea
+              label="Description"
+              disabled
+              {...register('description', { maxLength: 280 })}
+            />
+            <Input
+              label="Value"
+              type="number"
+              disabled
+              {...register('value', { valueAsNumber: true })}
+            />
             <Input
               label="Quantity"
               type="number"
+              disabled
               {...register('quantity', { valueAsNumber: true })}
             />
-            <Input label="Image" {...register('imageUrl', { maxLength: 140 })} />
+            <Input label="Image" disabled {...register('imageUrl', { maxLength: 140 })} />
 
-            {onSubmit && (
-              <div className="flex justify-end gap-2 mt-2">
+            {!disabled && onSubmit && (
+              <div className="flex justify-end gap-2 mt-4">
                 {item && (
                   <button
                     type="button"
