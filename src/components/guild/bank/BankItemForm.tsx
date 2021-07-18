@@ -17,27 +17,31 @@ export default function BankItemForm({ item, onSubmit, disabled }: BankItemFormP
           <>
             <Input
               label="Name*"
-              disabled
+              disabled={disabled}
               {...register('name', { required: true, maxLength: 70 })}
             />
             <TextArea
               label="Description"
-              disabled
+              disabled={disabled}
               {...register('description', { maxLength: 280 })}
             />
             <Input
               label="Value"
               type="number"
-              disabled
+              disabled={disabled}
               {...register('value', { valueAsNumber: true })}
             />
             <Input
               label="Quantity"
               type="number"
-              disabled
+              disabled={disabled}
               {...register('quantity', { valueAsNumber: true })}
             />
-            <Input label="Image" disabled {...register('imageUrl', { maxLength: 140 })} />
+            <Input
+              label="Image"
+              disabled={disabled}
+              {...register('imageUrl', { maxLength: 140 })}
+            />
 
             {!disabled && onSubmit && (
               <div className="flex justify-end gap-2 mt-4">
