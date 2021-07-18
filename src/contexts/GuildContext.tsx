@@ -23,8 +23,11 @@ export default function AccountProvider({ children }: PropsWithChildren<unknown>
           'Content-Type': 'application/json',
         },
       })
-        .then(t => t.json())
-        .then((t: { accessLevel: App.AccessLevel }) => setAccessLevel(t.accessLevel));
+        .then(async t => {
+          if (!t.ok) return 0;
+          return ((await t.json()) as { accessLevel: App.AccessLevel }).accessLevel;
+        })
+        .then(l => setAccessLevel(l));
     }
   }, [guildId, user?.access_token]);
 

@@ -102,7 +102,7 @@ export const useApi = <T extends { id: string | number }>(url: string | null) =>
   );
 
   const update = useCallback(
-    async (id: string | number, obj: Omit<T, 'id'>, shouldRevalidate = false) => {
+    async (id: string | number, obj: Omit<T, 'id'>, shouldRevalidate = true) => {
       if (!data) throw 'Data not loaded';
 
       const currObjIdx = data.findIndex(o => o.id === id);
@@ -148,7 +148,7 @@ export const useApi = <T extends { id: string | number }>(url: string | null) =>
       if (!res) return;
 
       const newData = [...data];
-      newData.splice(currObjIdx, 1, res);
+      newData.splice(currObjIdx, 1);
 
       await mutate(newData, shouldRevalidate);
 
