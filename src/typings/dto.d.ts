@@ -15,6 +15,17 @@ export declare global {
         description?: string;
         imageUrl?: string;
       };
+
+      type Currency = {
+        id: string;
+        name: string;
+        symbol: string;
+        description?: string;
+        timelyEnabled: boolean;
+        timelyAmount: number;
+        timelyInterval: number;
+        isLocked: boolean;
+      }
     }
   }
 }

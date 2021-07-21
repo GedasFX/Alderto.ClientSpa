@@ -21,7 +21,6 @@ export declare global {
     };
 
     type ErrorResponse = {
-      errorState: ErrorState;
       message: string;
     };
 
