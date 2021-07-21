@@ -35,6 +35,13 @@ export declare global {
         amount: number;
         isAward: boolean;
       };
+
+      type CurrencyWallet = {
+        id: string;
+        memberId: string;
+        amount: number;
+        timelyLastClaimed: string;
+      };
     }
   }
 }

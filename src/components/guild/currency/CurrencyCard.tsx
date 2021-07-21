@@ -2,6 +2,7 @@ import { FiChevronsDown, FiClock, FiEdit, FiLock, FiUnlock } from 'react-icons/f
 import clsx from 'clsx';
 import CurrencyTransactions from './CurrencyTransactions';
 import { useState } from 'react';
+import CurrencyLeaderboards from './CurrencyLeaderboards';
 
 type CurrencyCardProps = {
   currency: Dto.Guild.Currency;
@@ -18,6 +19,7 @@ export default function CurrencyCard({
   onEdit,
 }: CurrencyCardProps) {
   const [displayTransactions, setDisplayTransactions] = useState(false);
+  const [displayLeaderboards, setDisplayLeaderboards] = useState(false);
 
   return (
     <>
@@ -97,6 +99,24 @@ export default function CurrencyCard({
           {displayTransactions && (
             <div className="border-t dark:border-dark-5 pt-4">
               <CurrencyTransactions currencyId={currency.id} />
+            </div>
+          )}
+        </div>
+        <div className="p-4">
+          <button
+            className="flex items-center gap-2 mb-2 w-full"
+            onClick={() => setDisplayLeaderboards(t => !t)}
+          >
+            <FiChevronsDown
+              className={clsx('transform', displayLeaderboards && 'rotate-180')}
+              size={24}
+              strokeWidth={1.5}
+            />
+            Leaderboards
+          </button>
+          {displayLeaderboards && (
+            <div className="border-t dark:border-dark-5 pt-4">
+              <CurrencyLeaderboards currencyId={currency.id} />
             </div>
           )}
         </div>

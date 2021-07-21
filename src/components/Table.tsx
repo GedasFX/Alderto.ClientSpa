@@ -1,5 +1,7 @@
 import clsx from 'clsx';
 import React, { useMemo, useState } from 'react';
+import { useEffect } from 'react';
+import { useRef } from 'react';
 import { FiSkipBack, FiSkipForward } from 'react-icons/fi';
 import { useTable, usePagination, Column } from 'react-table';
 import { useApi } from 'src/services';
@@ -24,6 +26,13 @@ export default function Table<T extends { id: string | number }>({
   }
 
   const mData = useMemo(() => data ?? [], [data]);
+
+  const pageInput = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    if (pageInput.current) {
+      pageInput.current.value = String(currentPage);
+    }
+  }, [currentPage]);
 
   const { getTableProps, getTableBodyProps, headerGroups, prepareRow, page } = useTable(
     {
@@ -71,7 +80,10 @@ export default function Table<T extends { id: string | number }>({
             prepareRow(row);
             return (
               // eslint-disable-next-line react/jsx-key
-              <tr className={clsx(i % 2 === 0 && 'bg-gray-200 dark:bg-dark-1')} {...row.getRowProps()}>
+              <tr
+                className={clsx(i % 2 === 0 && 'bg-gray-200 dark:bg-dark-1')}
+                {...row.getRowProps()}
+              >
                 {row.cells.map(cell => {
                   return (
                     // eslint-disable-next-line react/jsx-key
@@ -97,8 +109,9 @@ export default function Table<T extends { id: string | number }>({
           <div className="flex gap-2 items-center">
             Page
             <input
+              ref={pageInput}
               type="number"
-              value={currentPage}
+              defaultValue={currentPage}
               min="1"
               onBlur={e => {
                 setCurrentPage(e.target.value ? Number(e.target.value) : 1);
