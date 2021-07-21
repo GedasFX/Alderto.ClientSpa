@@ -36,7 +36,7 @@ const fetcher = async <T>(
   body?: BodyInit | null,
   config?: RequestInit
 ) => {
-  const result = await fetch(`${process.env.NEXT_PUBLIC_API}${url}`, {
+  const result = await fetch(url, {
     ...config,
     body,
     headers: {
@@ -59,7 +59,10 @@ const fetcher = async <T>(
   });
 };
 
-export const useApi = <T extends { id: string | number }>(url: string | null) => {
+export const useApi = <T extends { id: string | number }>(
+  url: string | null,
+  search?: { page?: number; limit?: number }
+) => {
   const { user } = useAccount();
   const guild = useGuild();
 
@@ -69,8 +72,17 @@ export const useApi = <T extends { id: string | number }>(url: string | null) =>
     url = null;
   }
 
-  const { data, error, mutate } = useSWR([url, user?.access_token], (u: string, token: string) =>
-    fetcher<T[]>(u, token)
+  if (url) {
+    const req = new URL(`${process.env.NEXT_PUBLIC_API}${url}`);
+    if (search?.page) req.searchParams.append('page', `${search.page}`);
+    if (search?.limit) req.searchParams.append('limit', `${search.limit}`);
+
+    url = req.href;
+  }
+
+  const { data, error, mutate } = useSWR(
+    url && user?.access_token ? [url, user.access_token] : null,
+    (u: string, token: string) => fetcher<T[]>(u, token)
   );
 
   const request = useCallback(

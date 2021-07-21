@@ -25,7 +25,16 @@ export declare global {
         timelyAmount: number;
         timelyInterval: number;
         isLocked: boolean;
-      }
+      };
+
+      type CurrencyTransaction = {
+        id: number;
+        date: string;
+        senderId: string;
+        recipientId: string;
+        amount: number;
+        isAward: boolean;
+      };
     }
   }
 }

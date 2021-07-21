@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import clsx from 'clsx';
+import React, { useMemo, useState } from 'react';
+import { FiSkipBack, FiSkipForward } from 'react-icons/fi';
 import { useTable, usePagination, Column } from 'react-table';
 import { useApi } from 'src/services';
 
@@ -16,30 +18,26 @@ export default function Table<T extends { id: string | number }>({
   const [pageSize, setPageSize] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const { data: apiData } = useApi<T>(dataUrl ?? null);
+  const { data: apiData } = useApi<T>(dataUrl ?? null, { page: currentPage, limit: pageSize });
   if (!data) {
-    data = apiData ?? [];
+    data = apiData;
   }
 
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    prepareRow,
-    page,
-    pageOptions,
-    state: { pageIndex },
-  } = useTable(
+  const mData = useMemo(() => data ?? [], [data]);
+
+  const { getTableProps, getTableBodyProps, headerGroups, prepareRow, page } = useTable(
     {
       columns,
-      data,
+      data: mData,
       useControlledState: state => {
         return React.useMemo(
           () => ({
             ...state,
             pageIndex: currentPage,
           }),
-          [state]
+          //
+          // eslint-disable-next-line react-hooks/exhaustive-deps
+          [state, currentPage]
         );
       },
       initialState: { pageIndex: currentPage },
@@ -51,26 +49,17 @@ export default function Table<T extends { id: string | number }>({
 
   return (
     <>
-      <table {...getTableProps()} className="table-fixed">
+      <table {...getTableProps()} className="table">
         <thead>
           {headerGroups.map(headerGroup => (
             // eslint-disable-next-line react/jsx-key
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.slice(0, 1).map(column => (
+            <tr
+              className="border-b-2 dark:border-dark-5 whitespace-nowrap"
+              {...headerGroup.getHeaderGroupProps()}
+            >
+              {headerGroup.headers.map(column => (
                 // eslint-disable-next-line react/jsx-key
-                <th
-                  {...column.getHeaderProps()}
-                  className="px-1 py-4 bg-red-100 capitalize w-96 text-left"
-                >
-                  {column.render('Header')}
-                </th>
-              ))}
-              {headerGroup.headers.slice(1).map(column => (
-                // eslint-disable-next-line react/jsx-key
-                <th
-                  {...column.getHeaderProps()}
-                  className="py-4 bg-red-100 capitalize w-1/6 text-left"
-                >
+                <th {...column.getHeaderProps()} className="">
                   {column.render('Header')}
                 </th>
               ))}
@@ -78,15 +67,15 @@ export default function Table<T extends { id: string | number }>({
           ))}
         </thead>
         <tbody {...getTableBodyProps()}>
-          {page.map(row => {
+          {page.map((row, i) => {
             prepareRow(row);
             return (
               // eslint-disable-next-line react/jsx-key
-              <tr {...row.getRowProps()}>
+              <tr className={clsx(i % 2 === 0 && 'bg-gray-200 dark:bg-dark-1')} {...row.getRowProps()}>
                 {row.cells.map(cell => {
                   return (
                     // eslint-disable-next-line react/jsx-key
-                    <td {...cell.getCellProps()} className="truncate p-1 border-b-2">
+                    <td {...cell.getCellProps()} className="border-b dark:border-dark-5">
                       {cell.render('Cell')}
                     </td>
                   );
@@ -97,54 +86,40 @@ export default function Table<T extends { id: string | number }>({
         </tbody>
       </table>
 
-      <div className="flex justify-between bg-red-100 p-4">
-        <button
-          onClick={() => {
-            setCurrentPage(1);
-          }}
-          disabled={currentPage === 1}
-        >
-          first
-        </button>
-        <button
-          onClick={() => {
-            setCurrentPage(s => (s === 0 ? 0 : s - 1));
-          }}
-          disabled={currentPage === 1}
-        >
-          prev
-        </button>
-        <button
-          onClick={() => {
-            setCurrentPage(s => s + 1);
-          }}
-        >
-          next
-        </button>
-        <span>
-          Page
-          <strong>
-            {pageIndex} of {pageOptions.length}
-          </strong>
-        </span>
-        <span>
-          | Go to page:
-          <input
-            type="number"
-            defaultValue={pageIndex}
-            min="1"
-            onChange={e => {
-              const page = e.target.value ? Number(e.target.value) : 1;
-              setCurrentPage(page);
+      <div className="flex justify-around p-4">
+        <div className="flex gap-4">
+          <button
+            onClick={() => setCurrentPage(s => (s === 0 ? 0 : s - 1))}
+            disabled={currentPage === 1}
+          >
+            <FiSkipBack />
+          </button>
+          <div className="flex gap-2 items-center">
+            Page
+            <input
+              type="number"
+              value={currentPage}
+              min="1"
+              onBlur={e => {
+                setCurrentPage(e.target.value ? Number(e.target.value) : 1);
+              }}
+              className="form-control w-16 border-2 rounded px-2"
+            />
+          </div>
+          <button
+            onClick={() => {
+              setCurrentPage(s => s + 1);
             }}
-            className="w-20 border-2 rounded px-2"
-          />
-        </span>
+          >
+            <FiSkipForward />
+          </button>
+        </div>
+
         <select
+          className="form-control w-32"
           value={pageSize}
-          onBlur={e => {
-            setPageSize(Number(e.target.value));
-          }}
+          onChange={e => setPageSize(Number(e.target.value))}
+          onBlur={e => setPageSize(Number(e.target.value))}
         >
           {[5, 10, 20].map(pageSize => (
             <option key={pageSize} value={pageSize}>

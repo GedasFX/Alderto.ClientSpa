@@ -1,5 +1,7 @@
-import { FiClock, FiEdit, FiLock, FiUnlock } from 'react-icons/fi';
+import { FiChevronsDown, FiClock, FiEdit, FiLock, FiUnlock } from 'react-icons/fi';
 import clsx from 'clsx';
+import CurrencyTransactions from './CurrencyTransactions';
+import { useState } from 'react';
 
 type CurrencyCardProps = {
   currency: Dto.Guild.Currency;
@@ -15,6 +17,8 @@ export default function CurrencyCard({
   onRequestEdit,
   onEdit,
 }: CurrencyCardProps) {
+  const [displayTransactions, setDisplayTransactions] = useState(false);
+
   return (
     <>
       <div className="intro-y box my-4">
@@ -41,9 +45,11 @@ export default function CurrencyCard({
             </button>
             <button
               title={
-                currency.timelyEnabled
-                  ? 'Enabled - users can claim timely rewards'
-                  : 'Disabled - users cannot claim timely rewards'
+                !currency.timelyEnabled
+                  ? 'Disabled - users cannot claim timely rewards'
+                  : currency.timelyAmount === 0 || currency.timelyInterval === 0
+                  ? 'Disabled - the timely setup is invalid'
+                  : 'Enabled - users can claim timely rewards'
               }
               onClick={() =>
                 onEdit &&
@@ -52,13 +58,17 @@ export default function CurrencyCard({
                 })
               }
             >
-              {
-                <FiClock
-                  size={24}
-                  strokeWidth={1.5}
-                  className={clsx(currency.timelyEnabled ? 'text-theme-10' : 'text-theme-24')}
-                />
-              }
+              <FiClock
+                size={24}
+                strokeWidth={1.5}
+                className={clsx(
+                  !currency.timelyEnabled
+                    ? 'text-theme-24'
+                    : currency.timelyAmount === 0 || currency.timelyInterval === 0
+                    ? 'text-theme-23'
+                    : 'text-theme-10'
+                )}
+              />
             </button>
             {currency.symbol} {currency.name}
           </div>
@@ -72,10 +82,26 @@ export default function CurrencyCard({
             </div>
           )}
         </div>
-        {/* <div className="p-4 flex items-center gap-2">
-          <FiChevronsDown size={24} strokeWidth={1.5} /> Leaderboards
+        <div className="p-4">
+          <button
+            className="flex items-center gap-2 mb-2 w-full"
+            onClick={() => setDisplayTransactions(t => !t)}
+          >
+            <FiChevronsDown
+              className={clsx('transform', displayTransactions && 'rotate-180')}
+              size={24}
+              strokeWidth={1.5}
+            />
+            Transactions
+          </button>
+          {displayTransactions && (
+            <div className="border-t dark:border-dark-5 pt-4">
+              <CurrencyTransactions currencyId={currency.id} />
+            </div>
+          )}
         </div>
-        <div className="p-4 flex items-center gap-2">
+
+        {/* <div className="p-4 flex items-center gap-2">
           <FiChevronsDown size={24} strokeWidth={1.5} /> Transactions
         </div> */}
       </div>
