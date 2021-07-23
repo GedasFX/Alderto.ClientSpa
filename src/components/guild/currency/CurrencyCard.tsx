@@ -18,8 +18,7 @@ export default function CurrencyCard({
   onRequestEdit,
   onEdit,
 }: CurrencyCardProps) {
-  const [displayTransactions, setDisplayTransactions] = useState(false);
-  const [displayLeaderboards, setDisplayLeaderboards] = useState(false);
+  const [openTab, setOpenTab] = useState<number | null>(null);
 
   return (
     <>
@@ -84,46 +83,44 @@ export default function CurrencyCard({
             </div>
           )}
         </div>
-        <div className="p-4">
-          <button
-            className="flex items-center gap-2 mb-2 w-full"
-            onClick={() => setDisplayTransactions(t => !t)}
-          >
-            <FiChevronsDown
-              className={clsx('transform', displayTransactions && 'rotate-180')}
-              size={24}
-              strokeWidth={1.5}
-            />
-            Transactions
-          </button>
-          {displayTransactions && (
-            <div className="border-t dark:border-dark-5 pt-4">
-              <CurrencyTransactions currencyId={currency.id} />
-            </div>
-          )}
+        <div className="p-4 flex-1">
+          <div className="w-full">
+            <button
+              className="flex items-center gap-2 mb-2 w-full"
+              onClick={() => setOpenTab(t => (t !== 0 ? 0 : null))}
+            >
+              <FiChevronsDown
+                className={clsx('transform', openTab === 0 && 'rotate-180')}
+                size={24}
+                strokeWidth={1.5}
+              />
+              Transactions
+            </button>
+            {openTab === 0 && (
+              <div className="border-t dark:border-dark-5 pt-4">
+                <CurrencyTransactions currencyId={currency.id} />
+              </div>
+            )}
+          </div>
+          <div>
+            <button
+              className="flex items-center gap-2 mb-2 w-full"
+              onClick={() => setOpenTab(t => (t !== 1 ? 1 : null))}
+            >
+              <FiChevronsDown
+                className={clsx('transform', openTab === 1 && 'rotate-180')}
+                size={24}
+                strokeWidth={1.5}
+              />
+              Leaderboards
+            </button>
+            {openTab === 1 && (
+              <div className="border-t dark:border-dark-5 pt-4">
+                <CurrencyLeaderboards currencyId={currency.id} />
+              </div>
+            )}
+          </div>
         </div>
-        <div className="p-4">
-          <button
-            className="flex items-center gap-2 mb-2 w-full"
-            onClick={() => setDisplayLeaderboards(t => !t)}
-          >
-            <FiChevronsDown
-              className={clsx('transform', displayLeaderboards && 'rotate-180')}
-              size={24}
-              strokeWidth={1.5}
-            />
-            Leaderboards
-          </button>
-          {displayLeaderboards && (
-            <div className="border-t dark:border-dark-5 pt-4">
-              <CurrencyLeaderboards currencyId={currency.id} />
-            </div>
-          )}
-        </div>
-
-        {/* <div className="p-4 flex items-center gap-2">
-          <FiChevronsDown size={24} strokeWidth={1.5} /> Transactions
-        </div> */}
       </div>
     </>
   );

@@ -58,45 +58,47 @@ export default function Table<T extends { id: string | number }>({
 
   return (
     <>
-      <table {...getTableProps()} className="table">
-        <thead>
-          {headerGroups.map(headerGroup => (
-            // eslint-disable-next-line react/jsx-key
-            <tr
-              className="border-b-2 dark:border-dark-5 whitespace-nowrap"
-              {...headerGroup.getHeaderGroupProps()}
-            >
-              {headerGroup.headers.map(column => (
-                // eslint-disable-next-line react/jsx-key
-                <th {...column.getHeaderProps()} className="">
-                  {column.render('Header')}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody {...getTableBodyProps()}>
-          {page.map((row, i) => {
-            prepareRow(row);
-            return (
+      <div className="w-full overflow-x-auto">
+        <table {...getTableProps()} className="table">
+          <thead>
+            {headerGroups.map(headerGroup => (
               // eslint-disable-next-line react/jsx-key
               <tr
-                className={clsx(i % 2 === 0 && 'bg-gray-200 dark:bg-dark-1')}
-                {...row.getRowProps()}
+                className="border-b-2 dark:border-dark-5 whitespace-nowrap"
+                {...headerGroup.getHeaderGroupProps()}
               >
-                {row.cells.map(cell => {
-                  return (
-                    // eslint-disable-next-line react/jsx-key
-                    <td {...cell.getCellProps()} className="border-b dark:border-dark-5">
-                      {cell.render('Cell')}
-                    </td>
-                  );
-                })}
+                {headerGroup.headers.map(column => (
+                  // eslint-disable-next-line react/jsx-key
+                  <th {...column.getHeaderProps()} className="">
+                    {column.render('Header')}
+                  </th>
+                ))}
               </tr>
-            );
-          })}
-        </tbody>
-      </table>
+            ))}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+            {page.map((row, i) => {
+              prepareRow(row);
+              return (
+                // eslint-disable-next-line react/jsx-key
+                <tr
+                  className={clsx(i % 2 === 0 && 'bg-gray-200 dark:bg-dark-1')}
+                  {...row.getRowProps()}
+                >
+                  {row.cells.map(cell => {
+                    return (
+                      // eslint-disable-next-line react/jsx-key
+                      <td {...cell.getCellProps()} className="border-b dark:border-dark-5">
+                        {cell.render('Cell')}
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
 
       <div className="flex justify-around p-4">
         <div className="flex gap-4">
