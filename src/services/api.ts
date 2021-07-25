@@ -66,7 +66,7 @@ export const useApi = <T extends { id: string | number }>(
   const { user } = useAccount();
   const guild = useGuild();
 
-  url = guild?.id ? `/guilds/${guild.id}` + url : null;
+  url = url && guild?.id ? `/guilds/${guild.id}` + url : null;
 
   if (!user) {
     url = null;

@@ -60,19 +60,22 @@ type Option = {
 type SelectProps = React.DetailedHTMLProps<
   React.SelectHTMLAttributes<HTMLSelectElement>,
   HTMLSelectElement
-> & { options: Option[] };
+> & { label?: React.ReactNode; options: Option[] };
 
 export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(function Select(
   { options, ...props },
   ref
 ) {
   return (
-    <select ref={ref} {...props}>
-      {options.map(({ label, value }, i) => (
-        <option key={typeof value === 'string' ? value : i} value={value}>
-          {label}
-        </option>
-      ))}
-    </select>
+    <label className="form-label block mb-3">
+      {props.label}
+      <select className="form-control mt-1" ref={ref} {...props}>
+        {options.map(({ label, value }, i) => (
+          <option key={typeof value === 'string' ? value : i} value={value}>
+            {label}
+          </option>
+        ))}
+      </select>
+    </label>
   );
 });

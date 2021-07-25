@@ -42,6 +42,13 @@ export declare global {
         amount: number;
         timelyLastClaimed: string;
       };
+
+      type Message = {
+        id: string;
+        channelId: string;
+        lastModified: string;
+        content: string;
+      };
     }
   }
 }

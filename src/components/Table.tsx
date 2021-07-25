@@ -10,16 +10,19 @@ type TableProps<T extends Record<string, unknown>> = {
   columns: Column<T>[];
   data?: T[];
   dataUrl?: string;
+  disablePagination?: boolean;
 };
 
 export default function Table<T extends { id: string | number }>({
   columns,
   data,
   dataUrl,
+  disablePagination,
 }: TableProps<T>) {
   const [pageSize, setPageSize] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
 
+  console.log(dataUrl);
   const { data: apiData } = useApi<T>(dataUrl ?? null, { page: currentPage, limit: pageSize });
   if (!data) {
     data = apiData;
@@ -99,50 +102,51 @@ export default function Table<T extends { id: string | number }>({
           </tbody>
         </table>
       </div>
-
-      <div className="flex justify-around p-4">
-        <div className="flex gap-4">
-          <button
-            onClick={() => setCurrentPage(s => (s === 0 ? 0 : s - 1))}
-            disabled={currentPage === 1}
-          >
-            <FiSkipBack />
-          </button>
-          <div className="flex gap-2 items-center">
-            Page
-            <input
-              ref={pageInput}
-              type="number"
-              defaultValue={currentPage}
-              min="1"
-              onBlur={e => {
-                setCurrentPage(e.target.value ? Number(e.target.value) : 1);
+      {!disablePagination && (
+        <div className="flex justify-around p-4">
+          <div className="flex gap-4">
+            <button
+              onClick={() => setCurrentPage(s => (s === 0 ? 0 : s - 1))}
+              disabled={currentPage === 1}
+            >
+              <FiSkipBack />
+            </button>
+            <div className="flex gap-2 items-center">
+              Page
+              <input
+                ref={pageInput}
+                type="number"
+                defaultValue={currentPage}
+                min="1"
+                onBlur={e => {
+                  setCurrentPage(e.target.value ? Number(e.target.value) : 1);
+                }}
+                className="form-control w-16 border-2 rounded px-2"
+              />
+            </div>
+            <button
+              onClick={() => {
+                setCurrentPage(s => s + 1);
               }}
-              className="form-control w-16 border-2 rounded px-2"
-            />
+            >
+              <FiSkipForward />
+            </button>
           </div>
-          <button
-            onClick={() => {
-              setCurrentPage(s => s + 1);
-            }}
-          >
-            <FiSkipForward />
-          </button>
-        </div>
 
-        <select
-          className="form-control w-32"
-          value={pageSize}
-          onChange={e => setPageSize(Number(e.target.value))}
-          onBlur={e => setPageSize(Number(e.target.value))}
-        >
-          {[5, 10, 20].map(pageSize => (
-            <option key={pageSize} value={pageSize}>
-              Show {pageSize}
-            </option>
-          ))}
-        </select>
-      </div>
+          <select
+            className="form-control w-32"
+            value={pageSize}
+            onChange={e => setPageSize(Number(e.target.value))}
+            onBlur={e => setPageSize(Number(e.target.value))}
+          >
+            {[5, 10, 20].map(pageSize => (
+              <option key={pageSize} value={pageSize}>
+                Show {pageSize}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
     </>
   );
 }
