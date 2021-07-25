@@ -3,8 +3,6 @@ import { useGuild } from 'src/contexts/GuildContext';
 import { useApi } from 'src/services';
 import { modal } from 'src/services/modal';
 import { FiX, FiPlus } from 'react-icons/fi';
-import CurrencyCard from 'src/components/guild/currency/CurrencyCard';
-import CurrencyForm from 'src/components/guild/currency/CurrencyForm';
 import { groupBy } from 'lodash';
 import MessageCard from 'src/components/guild/messages/MessageCard';
 import MessageForm from 'src/components/guild/messages/MessageForm';
@@ -55,15 +53,18 @@ export default function GuildCurrencies() {
               <FiX strokeWidth={2.5} size={24} onClick={() => ref.close()} />
             </button>
           </div>
-          <MessageForm message={obj} onSubmit={i => handleSubmit(obj, i).then(() => ref.close())} />
+          <MessageForm
+            message={obj}
+            disabled={accessLevel < 2}
+            onSubmit={i => handleSubmit(obj, i).then(() => ref.close())}
+          />
         </>
       );
     },
-    [handleSubmit]
+    [accessLevel, handleSubmit]
   );
 
   const groupData = useMemo(() => groupBy(data ?? [], 'channelId'), [data]);
-  console.log(groupData);
 
   const { data: channels } = useApi<Discord.Channel>('/channels');
 
@@ -101,7 +102,6 @@ export default function GuildCurrencies() {
           guildId={guild.id}
           data={groupData[b]}
           onRequestEdit={i => openForm(i)}
-          editable={accessLevel >= 3}
         />
       ))}
     </div>

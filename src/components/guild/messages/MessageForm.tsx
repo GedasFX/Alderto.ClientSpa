@@ -23,7 +23,7 @@ export default function MessageForm({ message, disabled, onSubmit }: MessageForm
               {...register('content', { maxLength: 2000 })}
             />
 
-            {onSubmit && (
+            {!disabled && onSubmit && (
               <div className="flex justify-end gap-2 mt-4">
                 {message && (
                   <button
