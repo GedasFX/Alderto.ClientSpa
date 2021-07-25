@@ -1,9 +1,10 @@
 import clsx from 'clsx';
 import { FiBarChart2, FiChevronDown } from 'react-icons/fi';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import Logo from './Logo';
-import routes, { Route, RouteGroup, RouteLink } from 'src/conf/routes';
+import getRoutes, { Route, RouteGroup, RouteLink } from 'src/conf/routes';
+import { useGuild } from 'src/contexts/GuildContext';
 
 function MenuRouteLink({ route }: { route: RouteLink }) {
   return (
@@ -53,6 +54,9 @@ function MenuRoute({ route }: { route: Route }) {
 
 export default function MobileMenu() {
   const [navVisible, setNavVisible] = useState(false);
+
+  const guild = useGuild();
+  const routes = useMemo(() => getRoutes({ guildId: guild?.id }), [guild?.id]);
 
   return (
     <div className={clsx('mobile-menu', 'md:hidden')}>

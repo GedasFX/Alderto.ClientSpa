@@ -104,7 +104,7 @@ export default function AccountMenu() {
   }
 
   if (user === undefined) {
-    return <span>Loading user info</span>;
+    return <span className="float-right">Loading user info</span>;
   }
 
   return (

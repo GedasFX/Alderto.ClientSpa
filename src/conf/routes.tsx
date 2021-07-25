@@ -1,4 +1,13 @@
-import { FiHome, FiActivity, FiNavigation, FiFolder } from 'react-icons/fi';
+import { FaPiggyBank } from 'react-icons/fa';
+import {
+  FiHome,
+  FiNavigation,
+  FiFolder,
+  FiUsers,
+  FiSettings,
+  FiHash,
+  FiDollarSign,
+} from 'react-icons/fi';
 
 export type RouteCommon = {
   name: string;
@@ -17,63 +26,64 @@ export type RouteGroup = RouteCommon & {
 
 export type Route = RouteLink | RouteGroup;
 
-const routes: Route[] = [
-  {
-    type: 'link',
-    path: '/',
-    name: 'News',
-    icon: <FiHome size={24} strokeWidth={1.5} />,
-  },
-  {
-    type: 'link',
-    path: '/docs',
-    name: 'Docs',
-    icon: <FiFolder size={24} strokeWidth={1.5} />,
-  },
-  {
-    type: 'group',
-    name: 'Lome',
-    icon: <FiHome size={24} strokeWidth={1.5} />,
-    children: [
-      {
-        type: 'link',
-        path: '/',
-        name: 'Child #2',
-        icon: <FiActivity size={24} strokeWidth={1.5} />,
-      },
-      {
-        type: 'link',
-        path: '/foo',
-        name: 'Child #3',
-        icon: <FiActivity size={24} strokeWidth={1.5} />,
-      },
-    ],
-  },
-  {
-    type: 'group',
-    name: 'Lomesssss',
-    icon: <FiHome size={24} strokeWidth={1.5} />,
-    children: [
-      {
-        type: 'link',
-        path: '/foo',
-        name: 'Child #2',
-        icon: <FiActivity size={24} strokeWidth={1.5} />,
-      },
-      {
-        type: 'link',
-        path: '/bar',
-        name: 'Child #3',
-        icon: <FiActivity size={24} strokeWidth={1.5} />,
-      },
-    ],
-  },
-  {
+export default function getRoutes({ guildId }: { guildId?: string }): Route[] {
+  const routes: Route[] = [];
+
+  routes.push(
+    {
+      type: 'link',
+      path: '/',
+      name: 'News',
+      icon: <FiHome size={24} strokeWidth={1.5} />,
+    },
+    {
+      type: 'link',
+      path: '/docs',
+      name: 'Docs',
+      icon: <FiFolder size={24} strokeWidth={1.5} />,
+    }
+  );
+
+  if (guildId) {
+    routes.push({
+      type: 'group',
+      name: 'Guild',
+      icon: <FiUsers size={24} strokeWidth={1.5} />,
+      children: [
+        {
+          type: 'link',
+          path: `/guilds/${guildId}/`,
+          name: 'Overview',
+          icon: <FiSettings size={24} strokeWidth={1.5} />,
+        },
+        {
+          type: 'link',
+          path: `/guilds/${guildId}/currencies`,
+          name: 'Currencies',
+          icon: <FiDollarSign size={24} strokeWidth={1.5} />,
+        },
+        {
+          type: 'link',
+          path: `/guilds/${guildId}/banks`,
+          name: 'Banks',
+          icon: <FaPiggyBank size={24} strokeWidth={1.5} />,
+        },
+        {
+          type: 'link',
+          path: `/guilds/${guildId}/messages`,
+          name: 'Messages',
+          icon: <FiHash size={24} strokeWidth={1.5} />,
+        },
+      ],
+    });
+  }
+
+  routes.push({
     type: 'link',
     path: 'https://discordapp.com/api/oauth2/authorize?client_id=595936593592844306&permissions=8&scope=bot',
     name: 'Invite to Server',
     icon: <FiNavigation size={24} strokeWidth={1.5} />,
-  },
-];
+  });
 
-export default routes;
+  return routes;
+}

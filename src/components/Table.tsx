@@ -22,7 +22,6 @@ export default function Table<T extends { id: string | number }>({
   const [pageSize, setPageSize] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
 
-  console.log(dataUrl);
   const { data: apiData } = useApi<T>(dataUrl ?? null, { page: currentPage, limit: pageSize });
   if (!data) {
     data = apiData;

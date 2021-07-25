@@ -1,11 +1,18 @@
 import clsx from 'clsx';
-import { FiChevronDown, FiHome } from 'react-icons/fi';
-import routes, { Route, RouteGroup, RouteLink } from 'src/conf/routes';
+import { FiChevronDown } from 'react-icons/fi';
+import getRoutes, { Route, RouteGroup, RouteLink } from 'src/conf/routes';
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import { useRouter } from 'next/dist/client/router';
+import { useGuild } from 'src/contexts/GuildContext';
 
-function MenuRouteLink({ route, active }: { route: RouteLink; active?: boolean }) {
+function MenuRouteLink({
+  route,
+  active,
+}: {
+  route: RouteLink;
+  active?: boolean;
+}) {
   return (
     <Link href={route.path}>
       <a className={clsx('side-menu w-full', active && 'side-menu--active')}>
@@ -58,14 +65,20 @@ function MenuRoute({ route, currentPath }: { route: Route; currentPath?: string 
 }
 
 export default function SideNav() {
-  const { pathname } = useRouter();
+  const { asPath } = useRouter();
+
+  const guild = useGuild();
+  const routes = useMemo(() => getRoutes({ guildId: guild?.id }), [guild?.id]);
+
+  console.log(routes);
+  console.log(asPath);
 
   return (
     <nav className="side-nav">
       <ul>
         {routes.map(r => (
           <li key={r.name}>
-            <MenuRoute route={r} currentPath={pathname} />
+            <MenuRoute route={r} currentPath={asPath} />
           </li>
         ))}
       </ul>
