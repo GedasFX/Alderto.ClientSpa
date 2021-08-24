@@ -6,9 +6,11 @@ import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
 import discordLoader from 'src/util/loaders/discordLoader';
+import { useGuild } from 'src/contexts/GuildContext';
 
 export default function ServerSelect() {
-  const { user, guildId } = useAccount();
+  const { user } = useAccount();
+  const guild = useGuild();
 
   const [referenceElement, setReferenceElement] = useState<HTMLElement | null>();
   const [popperElement, setPopperElement] = useState<HTMLElement | null>();
@@ -25,8 +27,8 @@ export default function ServerSelect() {
         ref={setReferenceElement}
         onClick={() => setDropdownVisible(v => !v)}
       >
-        {guildId
-          ? user?.profile.user.guilds.find((g: App.UserProfileGuild) => g.id === guildId).name
+        {guild && guild.id
+          ? user?.profile.user.guilds.find((g: App.UserProfileGuild) => g.id === guild.id).name
           : 'Select a server'}
         <FiChevronDown />
       </button>
